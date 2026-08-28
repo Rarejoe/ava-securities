@@ -59,36 +59,37 @@ def generate_case_number(service_slug: str) -> str:
     suffix = "".join(random.choices(string.digits, k=6))
     prefix = service_slug[:3].upper()
     return f"AVA-{year}-{prefix}-{suffix}"
-    
+
+
 def get_btc_price():
-     r = requests.get("https://mempool.space/api/v1/prices", timeout=10)
-     r.raise_for_status()
-     return Decimal(str(r.json()["USD"]))
+    r = requests.get("https://mempool.space/api/v1/prices", timeout=10)
+    r.raise_for_status()
+    return Decimal(str(r.json()["USD"]))
 
 
 def verify_btc_payment(amount_btc):
-     address = os.environ["BTC_WALLET_ADDRESS"]
+    address = os.environ["BTC_WALLET_ADDRESS"]
 
-     r = requests.get(
-         f"https://mempool.space/api/address/{address}/txs",
-         timeout=10
-     )
-     r.raise_for_status()
+    r = requests.get(
+        f"https://mempool.space/api/address/{address}/txs",
+        timeout=10
+    )
+    r.raise_for_status()
 
-     for tx in r.json():
-         if not tx.get("status", {}).get("confirmed"):
-             continue
+    for tx in r.json():
+        if not tx.get("status", {}).get("confirmed"):
+            continue
 
-         for output in tx.get("vout", []):
-             if output.get("scriptpubkey_address") != address:
-                 continue
+        for output in tx.get("vout", []):
+            if output.get("scriptpubkey_address") != address:
+                continue
 
-             received = Decimal(output.get("value", 0)) / Decimal(100_000_000)
+            received = Decimal(output.get("value", 0)) / Decimal(100_000_000)
 
-             if received >= Decimal(str(amount_btc)):
-                 return tx["txid"]
-                 
-       return None
+            if received >= Decimal(str(amount_btc)):
+                return tx["txid"]
+
+    return None
 
 # ---------------------------------------------------------------------
 # Auth routes

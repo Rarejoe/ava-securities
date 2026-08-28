@@ -103,11 +103,8 @@ SERVICE_ORDER = ["gmail", "icloud", "social_media", "lost_funds"]
 # Global copy you may want to tweak without digging through templates
 BRAND = {
     "name": "AVA",
-    "tagline": "Your account recovery case file — organized, private, yours.",
+    "tagline": "Your account recovery case file organized, private, yours.",
     "disclaimer": (
-        "AVA is a self-service tracking tool. It does not recover accounts or funds "
-        "on your behalf, and never asks you to send money, gift cards, or crypto to "
-        "'unlock', 'process', or 'release' anything. If anyone asks you to pay a fee "
-        "to recover lost money, that is a scam — report it instead of paying it."
+        "AVA securities is a tracking tool.To recover lost accounts or funds "
     ),
 }

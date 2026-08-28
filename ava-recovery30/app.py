@@ -206,7 +206,47 @@ def service_form(slug):
     if not service:
         abort(404)
 
+    payment = None
+    # Paid services get a pending payment record
+    if service.get("price"):
+        payment_resp = (
+            supabase.table("payments")
+            .select("*")
+            .eq("user_id", session["user"]["id"])
+            .eq("service_slug", slug)
+            .eq("status", "pending")
+            .order("created_at", desc=true)
+            .limit(1)
+            .execute()
+        )
+        payment = payment_resp.data[0] if payment_resp.data else None
+        if not payment:
+            btc_price = get_btc_price()
+            amount_btc = (
+                Decimal (str(service["price"])) / btc_price
+            ). quantize(Decimal("0.00000001"))
+            payment = (
+                supabase.table("payments")
+                .insert({
+                    "user_id": session["user"]["id"],
+                    "service_slug": slug,
+                    "amount_btc": str(amount_btc),
+                    "status": "pending",
+                })
+                .execute()
+                .data[0]
+            )
+                
+        
     if request.method == "POST":
+        # Paid services require confirmed payment
+        if service.get("price"):
+            if not payment or payment ["status"] != "confirmed":
+                flash(
+                    "please complete the Bitcoin payment before filing your case.",
+                    "error"
+                )
+                return redirect(url_for("service_form", slug=slug))          
         filled = {}
         for field in service["fields"]:
             if field["type"] == "file":
@@ -222,7 +262,7 @@ def service_form(slug):
                 f"{'s' if min_required != 1 else ''} before submitting.",
                 "error",
             )
-            return render_template("service_form.html", brand=BRAND, service=service)
+            return render_template("service_form.html", brand=BRAND, service=service, payment=payment)
 
         # Handle file upload(s) -> Supabase Storage, private bucket "attachments"
         uploaded_paths = []
@@ -254,7 +294,7 @@ def service_form(slug):
         except Exception as e:
             flash(f"Could not file case: {e}", "error")
 
-    return render_template("service_form.html", brand=BRAND, service=service)
+    return render_template("service_form.html", brand=BRAND, service=service, payment=payment)
 
 
 @app.route("/case/<case_id>")

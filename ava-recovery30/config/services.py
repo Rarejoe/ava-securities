@@ -42,7 +42,7 @@ SERVICES = {
             "access to a Gmail account."
         ),
         "min_fields_required": 1,
-        if service.get("price"): True,
+        "payment_required": True,
         "price": 500,
         "price_note": "One-time service fee.",
         "fields": [

@@ -79,14 +79,21 @@ def verify_btc_payment(amount_btc):
     ) as response:
         transactions = json.loads(response.read())
 
+    created_time = datetime.fromisoformat(
+        created_at.replace("Z" "+00:00")
+    ).timestamp()
+
     for tx in transactions:
-        if not tx.get("status", {}).get("confirmed"):
+        status = tx.get("status", {})
+        if not status.get("confirmed"):
             continue
 
+        # Ignore transactions  from before this payment was created
+        if status.get("block_time",0) < created_time:
+            continue
         for output in tx.get("vout", []):
             if output.get("scriptpubkey_address") != address:
                 continue
-
             received = Decimal(output.get("value", 0)) / Decimal(100_000_000)
 
             if received >= Decimal(str(amount_btc)):
@@ -295,6 +302,66 @@ def service_form(slug):
             flash(f"Could not file case: {e}", "error")
 
     return render_template("service_form.html", brand=BRAND, service=service, payment=payment)
+
+@app.route("/payment/verify/<payment_id>", methods=["POST"])
+@login_required
+def verify_payment(payment_id):
+    payment = (
+        supabase.table("payments")
+        .select("*")
+        .eq("id", payment_id)
+        .eq("user_id", session["user"]["id"])
+        .single()
+        .execute()
+        .data
+    )
+
+    if not payment:
+        abort(404)
+
+    txid = verify_btc_payment(
+        payment["amount_btc"],
+        payment["created_at"]
+    )
+
+    if not txid:
+        flash(
+            "Payment has not been detected yet. Please wait for the transaction to confirm.",
+            "error"
+        )
+        return redirect(
+            url_for("service_form", slug=payment["service_slug"])
+        )
+
+    # Make sure this transaction hasn't already been used
+    existing = (
+        supabase.table("payments")
+        .select("id")
+        .eq("txid", txid)
+        .execute()
+        .data
+    )
+
+    if existing:
+        flash("This Bitcoin transaction has already been used.", "error")
+        return redirect(
+            url_for("service_form", slug=payment["service_slug"])
+        )
+
+    supabase.table("payments").update({
+        "status": "confirmed",
+        "txid": txid,
+        "confirmed_at": datetime.utcnow().isoformat(),
+    }).eq("id", payment_id).execute()
+
+    flash(
+        "Bitcoin payment confirmed. You can now file your case.",
+        "success"
+    )
+
+    return redirect(
+        url_for("service_form", slug=payment["service_slug"])
+    )
 
 
 @app.route("/case/<case_id>")

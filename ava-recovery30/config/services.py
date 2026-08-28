@@ -46,8 +46,8 @@ SERVICES = {
             {"key": "issue_description", "label": "What happened? (brief description)", "type": "textarea", "required": False},
             {"key": "evidence", "label": "Screenshots / confirmation emails", "type": "file", "required": False},
         ],
-        "price": 0,
-        "price_note": "Tracking is free — this is your personal case log.",
+        "price": 200,
+        "price_note": "this is your personal case log.",
     },
     "icloud": {
         "slug": "icloud",

@@ -43,7 +43,7 @@ SERVICES = {
         ),
         "min_fields_required": 1,
         "payment_required": True,
-        "price": 0,
+        "price": 500,
         "price_note": "One-time service fee.",
         "fields": [
             {
@@ -66,13 +66,13 @@ SERVICES = {
             },
             {
                 "key": "contact_email",
-                "label": "Email address for updates",
+                "label": "How can we reach you?",
                 "type": "email",
                 "required": False,
             },
             {
                 "key": "contact_phone",
-                "label": "Phone number for updates",
+                "label": "How can we reach you?",
                 "type": "text",
                 "required": False,
             },
@@ -120,13 +120,13 @@ SERVICES = {
             },
             {
                 "key": "contact_email",
-                "label": "Email address for updates",
+                "label":"How can we reach you?",
                 "type": "email",
                 "required": False,
             },
             {
                 "key": "contact_phone",
-                "label": "Phone number for updates",
+                "label": "How can we reach you?",
                 "type": "text",
                 "required": False,
             },

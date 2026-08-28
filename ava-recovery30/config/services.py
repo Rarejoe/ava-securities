@@ -19,7 +19,7 @@ Each field:
     "key"         -> internal name, saved as this column key in the
                       submissions JSON (use snake_case, no spaces)
     "label"       -> what the user sees
-    "type"        -> one of the types above
+    "type"        -> one of the types above]
     "required"    -> True / False (per-field requirement)
     "options"     -> only for "select" fields
 
@@ -75,7 +75,7 @@ SERVICES = {
             {"key": "account_email", "label": "Associated email", "type": "email", "required": False},
             {"key": "issue_description", "label": "Brief description", "type": "textarea", "required": False},
         ],
-        "price": 0,
+        "price": $200,
         "price_note": "Tracking is free — this is your personal case log.",
     },
     "lost_funds": {

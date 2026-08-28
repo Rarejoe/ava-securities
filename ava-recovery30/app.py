@@ -88,7 +88,7 @@ def verify_btc_payment(amount_btc):
              if received >= Decimal(str(amount_btc)):
                  return tx["txid"]
                  
-   return None
+      return None
 
 # ---------------------------------------------------------------------
 # Auth routes

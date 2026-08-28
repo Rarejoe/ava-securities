@@ -75,7 +75,7 @@ SERVICES = {
             {"key": "account_email", "label": "Associated email", "type": "email", "required": False},
             {"key": "issue_description", "label": "Brief description", "type": "textarea", "required": False},
         ],
-        "price": $200,
+        "price": 200,
         "price_note": "Tracking is free — this is your personal case log.",
     },
     "lost_funds": {

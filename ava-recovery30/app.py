@@ -269,7 +269,7 @@ def service_form(slug):
                 f"{'s' if min_required != 1 else ''} before submitting.",
                 "error",
             )
-            return render_template("service_form.html", brand=BRAND, service=service, payment=payment, btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
+            return render_template("service_form.html", brand=BRAND, service=service, payment=payment, btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS"))
 
         # Handle file upload(s) -> Supabase Storage, private bucket "attachments"
         uploaded_paths = []
@@ -301,7 +301,7 @@ def service_form(slug):
         except Exception as e:
             flash(f"Could not file case: {e}", "error")
 
-    return render_template("service_form.html", brand=BRAND, service=service, payment=payment, btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
+    return render_template("service_form.html", brand=BRAND, service=service, payment=payment, btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS"))
 
 @app.route("/payment/verify/<payment_id>", methods=["POST"])
 @login_required

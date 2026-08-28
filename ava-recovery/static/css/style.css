@@ -1,0 +1,371 @@
+/* ============================================================
+   AVA — Design tokens
+   Palette: matured lemon-green, aged paper, ink, rust stamp
+   Type: Fraunces (display) / Work Sans (body) / IBM Plex Mono (data)
+   Signature: stamped case-file cards with perforated top edge
+   ============================================================ */
+
+:root {
+    --lemon: #B9C23E;
+    --lemon-deep: #838C2C;
+    --lemon-dark: #5C6320;
+    --ink: #22240F;
+    --paper: #F6F3E4;
+    --paper-dim: #EAE6D2;
+    --rust: #A8492E;
+    --gold: #C99A3E;
+    --green-ok: #4A6B3D;
+
+    --font-display: "Fraunces", serif;
+    --font-body: "Work Sans", sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+
+    --radius: 3px;
+    --shadow: 0 2px 0 rgba(34, 36, 15, 0.15);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--lemon);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+a { color: inherit; }
+
+/* ---------------- Topbar ---------------- */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.brand-mark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 0.02em;
+}
+
+.brand-sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--lemon-dark);
+}
+
+.topnav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+.btn-ghost {
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    font-size: 13px;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--lemon); }
+
+/* ---------------- Flash messages ---------------- */
+.flash-stack {
+    max-width: 760px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+}
+.flash {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    border: 1px solid var(--ink);
+}
+.flash-success { background: var(--paper); }
+.flash-error { background: #E8CFC5; border-color: var(--rust); }
+
+/* ---------------- Hero / headings ---------------- */
+main { max-width: 980px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--lemon-dark);
+    margin: 0 0 8px;
+}
+
+.hero h1, .form-card h1, .auth-card h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 40px;
+    margin: 0 0 12px;
+    line-height: 1.1;
+}
+
+.hero-sub, .form-sub, .auth-sub {
+    font-size: 16px;
+    color: var(--lemon-dark);
+    max-width: 46ch;
+    margin: 0 0 32px;
+}
+
+.section-heading {
+    font-family: var(--font-display);
+    font-size: 22px;
+    margin: 48px 0 16px;
+}
+
+/* ---------------- Service grid (dashboard tabs) ---------------- */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.service-tab {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 24px 20px 20px;
+    text-decoration: none;
+    color: var(--ink);
+    box-shadow: var(--shadow);
+    transition: transform 0.12s ease;
+}
+.service-tab:hover { transform: translateY(-3px); }
+
+.tab-index {
+    position: absolute;
+    top: -12px;
+    left: 18px;
+    background: var(--lemon-dark);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: var(--radius);
+}
+
+.service-tab h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 10px 0 8px;
+}
+
+.service-tab p {
+    font-size: 14px;
+    color: #4A4C36;
+    margin: 0 0 16px;
+}
+
+.tab-price {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--green-ok);
+    display: block;
+}
+
+/* ---------------- Case file cards (signature element) ---------------- */
+.case-file-stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+.case-card {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 18px;
+    text-decoration: none;
+    color: var(--ink);
+    position: relative;
+    box-shadow: var(--shadow);
+    background-image: radial-gradient(circle, var(--lemon) 2.5px, transparent 2.6px);
+    background-position: top -6px left 0;
+    background-size: 16px 16px;
+    background-repeat: repeat-x;
+}
+
+.case-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.case-number {
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+.stamp {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1.5px solid var(--rust);
+    color: var(--rust);
+    padding: 3px 8px;
+    border-radius: var(--radius);
+    transform: rotate(-3deg);
+}
+.stamp-in_progress { border-color: var(--gold); color: #8C6C1F; }
+.stamp-closed { border-color: var(--green-ok); color: var(--green-ok); }
+
+.case-service { font-weight: 500; margin: 4px 0; }
+.case-date { font-size: 13px; color: #6B6D52; margin: 0; }
+
+.empty-state {
+    background: var(--paper-dim);
+    border: 1px dashed var(--ink);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    color: var(--lemon-dark);
+}
+
+/* ---------------- Auth / form cards ---------------- */
+.auth-wrap {
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+}
+
+.auth-card, .form-card {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    padding: 36px;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: var(--shadow);
+}
+
+.form-wrap { max-width: 620px; margin: 0 auto; }
+.form-card { max-width: none; }
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--lemon-dark);
+}
+
+.stack { display: flex; flex-direction: column; gap: 18px; margin-top: 20px; }
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+input, textarea, select {
+    font-family: var(--font-body);
+    font-size: 15px;
+    padding: 10px 12px;
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+}
+input:focus, textarea:focus, select:focus {
+    outline: 3px solid var(--gold);
+    outline-offset: 1px;
+}
+
+.required-mark { color: var(--rust); }
+
+.min-fields-note {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--paper-dim);
+    border-left: 3px solid var(--gold);
+    padding: 8px 12px;
+    margin: 0 0 4px;
+}
+
+.price-note {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--green-ok);
+    border-top: 1px dashed var(--ink);
+    padding-top: 14px;
+}
+
+.btn-primary {
+    background: var(--ink);
+    color: var(--lemon);
+    border: none;
+    padding: 13px 20px;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+}
+.btn-primary:hover { background: var(--lemon-dark); }
+
+.auth-switch {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+.auth-switch a { text-decoration: underline; }
+
+/* ---------------- Case detail ---------------- */
+.case-data { margin: 24px 0 0; }
+.case-data-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--paper-dim);
+}
+.case-data-row dt { font-family: var(--font-mono); font-size: 13px; color: var(--lemon-dark); }
+.case-data-row dd { margin: 0; text-align: right; max-width: 60%; }
+
+/* ---------------- Footer disclaimer ---------------- */
+.disclaimer-strip {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 16px 24px;
+    font-size: 12px;
+}
+.disclaimer-strip p { max-width: 760px; margin: 0 auto; }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 600px) {
+    .topbar { padding: 16px 20px; }
+    main { padding: 24px 16px 60px; }
+    .hero h1, .form-card h1, .auth-card h1 { font-size: 30px; }
+    .auth-card, .form-card { padding: 24px; }
+}

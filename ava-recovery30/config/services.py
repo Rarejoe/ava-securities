@@ -44,6 +44,8 @@ SERVICES = {
             {"key": "account_email", "label": "Account email", "type": "email", "required": False},
             {"key": "last_access_date", "label": "Last known access date", "type": "date", "required": False},
             {"key": "issue_description", "label": "What happened? (brief description)", "type": "textarea", "required": False},
+            {"key": "contact_email", "label": "how can we reach you?", "type": "emaiL", "required": False},
+            {"key": "contact_phone", "label": "how can we reach you?", "type": "textarea", "required": False},
             {"key": "evidence", "label": "Screenshots / confirmation emails", "type": "file", "required": False},
         ],
         "price": 200,

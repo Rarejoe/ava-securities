@@ -66,7 +66,7 @@ def get_btc_price():
      return Decimal(str(r.json()["USD"]))
 
 
- def verify_btc_payment(amount_btc):
+def verify_btc_payment(amount_btc):
      address = os.environ["BTC_WALLET_ADDRESS"]
 
      r = requests.get(

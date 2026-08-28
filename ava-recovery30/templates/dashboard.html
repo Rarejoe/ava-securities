@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — {{ brand.name }}{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <p class="eyebrow">Case Tracker</p>
+        <h1>What are you recovering today?</h1>
+        <p class="hero-sub">{{ brand.tagline }}</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+        <div class="pulse-ring pulse-ring-1"></div>
+        <div class="pulse-ring pulse-ring-2"></div>
+        <div class="pulse-ring pulse-ring-3"></div>
+        <div class="pulse-core"></div>
+    </div>
+</section>
+
+<section class="service-grid">
+    {% for service in services %}
+    <a href="{{ url_for('service_form', slug=service.slug) }}" class="service-tab">
+        <span class="tab-index">{{ loop.index }}</span>
+        <h2>{{ service.name }}</h2>
+        <p>{{ service.description }}</p>
+        <span class="tab-price">{{ "Free" if not service.price else service.price ~ " " ~ service.price_note }}</span>
+    </a>
+    {% endfor %}
+</section>
+
+<section class="cases-section">
+    <h2 class="section-heading">Your filed cases</h2>
+    {% if cases %}
+    <div class="case-file-stack">
+        {% for case in cases %}
+        <a href="{{ url_for('case_detail', case_id=case.id) }}" class="case-card">
+            <div class="case-card-top">
+                <span class="case-number">{{ case.case_number }}</span>
+                <span class="stamp stamp-{{ case.status }}">{{ case.status | replace('_', ' ') }}</span>
+            </div>
+            <p class="case-service">{{ case.service_slug | replace('_', ' ') | title }}</p>
+            <p class="case-date">Filed {{ case.created_at[:10] }}</p>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No cases filed yet. Pick a category above to start your first one.</p>
+    {% endif %}
+</section>
+{% endblock %}

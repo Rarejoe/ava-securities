@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ case.case_number }} — {{ brand.name }}{% endblock %}
+{% block content %}
+<div class="form-wrap">
+    <a href="{{ url_for('dashboard') }}" class="back-link">&larr; Back to dashboard</a>
+
+    <div class="form-card">
+        <div class="case-card-top">
+            <span class="case-number">{{ case.case_number }}</span>
+            <span class="stamp stamp-{{ case.status }}">{{ case.status | replace('_', ' ') }}</span>
+        </div>
+        <h1>{{ service.name if service else case.service_slug }}</h1>
+        <p class="form-sub">Filed {{ case.created_at[:10] }}</p>
+
+        <dl class="case-data">
+            {% for key, value in case.data.items() %}
+            <div class="case-data-row">
+                <dt>{{ key | replace('_', ' ') | title }}</dt>
+                <dd>
+                    {% if value is iterable and value is not string %}
+                        {{ value | join(', ') }}
+                    {% else %}
+                        {{ value }}
+                    {% endif %}
+                </dd>
+            </div>
+            {% endfor %}
+        </dl>
+    </div>
+</div>
+{% endblock %}

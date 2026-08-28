@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Admin — {{ brand.name }}{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <p class="eyebrow">Admin</p>
+        <h1>All cases</h1>
+        <p class="hero-sub">{{ total }} case{{ "s" if total != 1 else "" }} filed across every account.</p>
+    </div>
+</section>
+
+<section class="admin-stats">
+    <div class="stat-pill">Open <strong>{{ counts.open }}</strong></div>
+    <div class="stat-pill">In progress <strong>{{ counts.in_progress }}</strong></div>
+    <div class="stat-pill">Closed <strong>{{ counts.closed }}</strong></div>
+</section>
+
+<section class="admin-filters">
+    <form method="get" class="filter-form">
+        <label>Status
+            <select name="status" onchange="this.form.submit()">
+                <option value="all" {{ "selected" if status_filter == "all" }}>All</option>
+                <option value="open" {{ "selected" if status_filter == "open" }}>Open</option>
+                <option value="in_progress" {{ "selected" if status_filter == "in_progress" }}>In progress</option>
+                <option value="closed" {{ "selected" if status_filter == "closed" }}>Closed</option>
+            </select>
+        </label>
+        <label>Service
+            <select name="service" onchange="this.form.submit()">
+                <option value="all" {{ "selected" if service_filter == "all" }}>All</option>
+                {% for s in services %}
+                <option value="{{ s.slug }}" {{ "selected" if service_filter == s.slug }}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </form>
+</section>
+
+<section class="cases-section">
+    {% if cases %}
+    <div class="case-file-stack">
+        {% for case in cases %}
+        <a href="{{ url_for('admin_case_detail', case_id=case.id) }}" class="case-card">
+            <div class="case-card-top">
+                <span class="case-number">{{ case.case_number }}</span>
+                <span class="stamp stamp-{{ case.status }}">{{ case.status | replace('_', ' ') }}</span>
+            </div>
+            <p class="case-service">{{ case.service_slug | replace('_', ' ') | title }}</p>
+            <p class="case-date">Filed {{ case.created_at[:10] }}</p>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No cases match this filter.</p>
+    {% endif %}
+</section>
+{% endblock %}

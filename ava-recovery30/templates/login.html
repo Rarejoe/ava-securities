@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Log in — {{ brand.name }}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-card">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" class="auth-logo">
+        <p class="eyebrow">Case Tracker</p>
+        <h1>Welcome back</h1>
+        <p class="auth-sub">{{ brand.tagline }}</p>
+        <form method="POST" class="stack">
+            <label>Email
+                <input type="email" name="email" required autofocus>
+            </label>
+            <label>Password
+                <input type="password" name="password" required>
+            </label>
+            <button type="submit" class="btn-primary">Log in</button>
+        </form>
+        <p class="auth-switch">No case file yet? <a href="{{ url_for('register') }}">Create one</a></p>
+    </div>
+</div>
+{% endblock %}

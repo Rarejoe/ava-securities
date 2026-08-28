@@ -1,7 +1,8 @@
 import os
 import random
 import string
-import requests
+import json
+import urllib.request
 from decimal import Decimal
 from datetime import datetime
 from functools import wraps
@@ -62,21 +63,23 @@ def generate_case_number(service_slug: str) -> str:
 
 
 def get_btc_price():
-    r = requests.get("https://mempool.space/api/v1/prices", timeout=10)
-    r.raise_for_status()
-    return Decimal(str(r.json()["USD"]))
+    with urllib.request.urlopen(
+        "https://mempool.space/api/v1/prices", 
+        timeout=10
+    ) as response:
+        data = json.loads(response.read())
+    return Decimal(str(data["USD"]))
 
 
 def verify_btc_payment(amount_btc):
     address = os.environ["BTC_WALLET_ADDRESS"]
-
-    r = requests.get(
-        f"https://mempool.space/api/address/{address}/txs",
+    with urllib.request.urlopen(
+         f"https://mempool.space/api/address/{address}/txs",
         timeout=10
-    )
-    r.raise_for_status()
+    ) as response:
+        transactions = json.loads(response.read())
 
-    for tx in r.json():
+    for tx in transactions:
         if not tx.get("status", {}).get("confirmed"):
             continue
 

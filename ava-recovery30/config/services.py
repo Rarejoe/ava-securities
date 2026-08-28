@@ -105,6 +105,6 @@ BRAND = {
     "name": "AVA",
     "tagline": "Your account recovery case file organized, private, yours.",
     "disclaimer": (
-        "AVA securities is a tracking tool.To recover lost accounts or funds "
+        "AVA securities is a trusted tracking tool, To recover lost accounts or funds "
     ),
 }

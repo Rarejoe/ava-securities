@@ -1,58 +1,259 @@
 {% extends "base.html" %}
+
 {% block title %}{{ service.name }} — {{ brand.name }}{% endblock %}
+
 {% block content %}
+
 <div class="form-wrap">
-    <a href="{{ url_for('dashboard') }}" class="back-link">&larr; Back to dashboard</a>
+
+    <a href="{{ url_for('dashboard') }}" class="back-link">
+        &larr; Back to dashboard
+    </a>
 
     <div class="form-card">
+
         <p class="eyebrow">New case</p>
+
         <h1>{{ service.name }}</h1>
-        <p class="form-sub">{{ service.description }}</p>
+
+        <p class="form-sub">
+            {{ service.description }}
+        </p>
 
         {% if service.min_fields_required %}
         <p class="min-fields-note">
-            Fill in at least {{ service.min_fields_required }} field{{ "s" if service.min_fields_required != 1 else "" }} below — the rest are optional.
+            Fill in at least
+            {{ service.min_fields_required }}
+            field{{ "s" if service.min_fields_required != 1 else "" }}
+            below — the rest are optional.
         </p>
         {% endif %}
 
-        <form method="POST" enctype="multipart/form-data" class="stack">
-            {% for field in service.fields %}
-            <label>
-                {{ field.label }}{% if field.required %} <span class="required-mark">*</span>{% endif %}
 
-                {% if field.type == "textarea" %}
-                    <textarea name="{{ field.key }}" rows="4" {{ "required" if field.required }}></textarea>
+        <!-- PRICE -->
 
-                {% elif field.type == "select" %}
-                    <select name="{{ field.key }}" {{ "required" if field.required }}>
-                        <option value="">Select one</option>
-                        {% for opt in field.options %}
-                        <option value="{{ opt }}">{{ opt }}</option>
-                        {% endfor %}
-                    </select>
+        <div class="price-note">
+            <strong>${{ service.price }}</strong>
+            <span>{{ service.price_note }}</span>
+        </div>
 
-                {% elif field.type == "file" %}
-                    <input type="file" name="{{ field.key }}" multiple {{ "required" if field.required }}>
 
-                {% elif field.type == "date" %}
-                    <input type="date" name="{{ field.key }}" {{ "required" if field.required }}>
+        <!-- BITCOIN PAYMENT -->
 
-                {% elif field.type == "email" %}
-                    <input type="email" name="{{ field.key }}" {{ "required" if field.required }}>
+        {% if payment and payment.status == "pending" %}
 
-                {% else %}
-                    <input type="text" name="{{ field.key }}" {{ "required" if field.required }}>
-                {% endif %}
-            </label>
-            {% endfor %}
+        <div class="payment-box">
 
-            <div class="price-note">
-                <strong>{{ "Free" if not service.price else service.price }}</strong>
-                <span>{{ service.price_note }}</span>
+            <p class="eyebrow">Payment required</p>
+
+            <h3>Pay with Bitcoin</h3>
+
+            <p>
+                Send exactly
+                <strong>{{ payment.amount_btc }} BTC</strong>
+                to the Bitcoin address below.
+            </p>
+
+            <div class="wallet-address">
+                {{ btc_wallet_address }}
             </div>
 
-            <button type="submit" class="btn-primary">File case</button>
+            <button
+                type="button"
+                class="btn-secondary"
+                onclick="copyWallet()"
+            >
+                Copy Bitcoin address
+            </button>
+
+            <form
+                method="POST"
+                action="{{ url_for('verify_payment', payment_id=payment.id) }}"
+                class="payment-verify-form"
+            >
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    I've Paid — Verify Payment
+                </button>
+
+            </form>
+
+            <p class="payment-note">
+                After sending the Bitcoin, click the button above.
+                Your payment must be confirmed on the Bitcoin network
+                before you can file your case.
+            </p>
+
+        </div>
+
+        {% elif payment and payment.status == "confirmed" %}
+
+        <div class="payment-success">
+
+            <strong>✓ Bitcoin payment confirmed</strong>
+
+            <span>
+                Your payment has been verified. You can now file your case.
+            </span>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- CASE FORM -->
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            class="stack"
+        >
+
+            {% for field in service.fields %}
+
+            <label>
+
+                {{ field.label }}
+
+                {% if field.required %}
+                    <span class="required-mark">*</span>
+                {% endif %}
+
+
+                {% if field.type == "textarea" %}
+
+                    <textarea
+                        name="{{ field.key }}"
+                        rows="4"
+                        {{ "required" if field.required }}
+                    ></textarea>
+
+
+                {% elif field.type == "select" %}
+
+                    <select
+                        name="{{ field.key }}"
+                        {{ "required" if field.required }}
+                    >
+
+                        <option value="">
+                            Select one
+                        </option>
+
+                        {% for opt in field.options %}
+
+                        <option value="{{ opt }}">
+                            {{ opt }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+
+                {% elif field.type == "file" %}
+
+                    <input
+                        type="file"
+                        name="{{ field.key }}"
+                        multiple
+                        {{ "required" if field.required }}
+                    >
+
+
+                {% elif field.type == "date" %}
+
+                    <input
+                        type="date"
+                        name="{{ field.key }}"
+                        {{ "required" if field.required }}
+                    >
+
+
+                {% elif field.type == "email" %}
+
+                    <input
+                        type="email"
+                        name="{{ field.key }}"
+                        {{ "required" if field.required }}
+                    >
+
+
+                {% else %}
+
+                    <input
+                        type="text"
+                        name="{{ field.key }}"
+                        {{ "required" if field.required }}
+                    >
+
+                {% endif %}
+
+            </label>
+
+            {% endfor %}
+
+
+            <!-- SUBMIT BUTTON -->
+
+            {% if not payment or payment.status == "confirmed" %}
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    File case
+                </button>
+
+            {% elif payment.status == "pending" %}
+
+                <button
+                    type="button"
+                    class="btn-primary"
+                    disabled
+                >
+                    Complete Bitcoin payment first
+                </button>
+
+            {% endif %}
+
         </form>
+
     </div>
+
 </div>
+
+
+<script>
+
+function copyWallet() {
+
+    const address = document
+        .querySelector(".wallet-address")
+        .innerText
+        .trim();
+
+    navigator.clipboard.writeText(address).then(() => {
+
+        const button = document.querySelector(
+            ".payment-box .btn-secondary"
+        );
+
+        const originalText = button.innerText;
+
+        button.innerText = "Copied ✓";
+
+        setTimeout(() => {
+            button.innerText = originalText;
+        }, 2000);
+
+    });
+
+}
+
+</script>
+
 {% endblock %}

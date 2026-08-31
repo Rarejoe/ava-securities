@@ -222,7 +222,7 @@ def service_form(slug):
             .eq("user_id", session["user"]["id"])
             .eq("service_slug", slug)
             .eq("status", "pending")
-            .order("created_at", desc=true)
+            .order("created_at", desc=True)
             .limit(1)
             .execute()
         )

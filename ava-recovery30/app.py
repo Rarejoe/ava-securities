@@ -93,7 +93,7 @@ def verify_btc_payment(amount_btc, created_at):
         for output in tx.get("vout", []):
             if output.get("scriptpubkey_address") != address:
                 continue
-            received = Decimal(output.get("value", 0)) / Decimal(100_000_000)
+            received = Decimal(str(output.get("value", 0))) / Decimal(100_000_000)
 
             if received >= Decimal(str(amount_btc)):
                 return tx["txid"]

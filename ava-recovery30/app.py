@@ -70,8 +70,7 @@ def get_btc_price():
         data = json.loads(response.read())
     return Decimal(str(data["USD"]))
 
-
-def verify_btc_payment(amount_btc):
+def verify_btc_payment(amount_btc, created_at):
     address = os.environ["BTC_WALLET_ADDRESS"]
     with urllib.request.urlopen(
          f"https://mempool.space/api/address/{address}/txs",

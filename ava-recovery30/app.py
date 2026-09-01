@@ -213,80 +213,112 @@ def service_form(slug):
         abort(404)
 
     payment = None
-    # Paid services get a pending payment record
+
     if service.get("price"):
-        payment_resp = (
-            supabase.table("payments")
-            .select("*")
-            .eq("user_id", session["user"]["id"])
-            .eq("service_slug", slug)
-            .eq("status", "pending")
-            .order("created_at", desc=True)
-            .limit(1)
-            .execute()
-        )
-        payment = payment_resp.data[0] if payment_resp.data else None
-        if not payment:
-            btc_price = get_btc_price()
-            amount_btc = (
-                Decimal (str(service["price"])) / btc_price
-            ). quantize(Decimal("0.00000001"))
-            payment = (
+        try:
+            payment_resp = (
                 supabase.table("payments")
-                .insert({
-                    "user_id": session["user"]["id"],
-                    "service_slug": slug,
-                    "amount_btc": str(amount_btc),
-                    "status": "pending",
-                })
+                .select("*")
+                .eq("user_id", session["user"]["id"])
+                .eq("service_slug", slug)
+                .eq("status", "pending")
+                .order("created_at", desc=True)
+                .limit(1)
                 .execute()
-                .data[0]
             )
-                
-        
+
+            payment = payment_resp.data[0] if payment_resp.data else None
+
+            if not payment:
+                btc_price = get_btc_price()
+                amount_btc = (
+                    Decimal(str(service["price"])) / btc_price
+                ).quantize(Decimal("0.00000001"))
+
+                payment = (
+                    supabase.table("payments")
+                    .insert({
+                        "user_id": session["user"]["id"],
+                        "service_slug": slug,
+                        "amount_usd": service["price"],
+                        "amount_btc": str(amount_btc),
+                        "status": "pending",
+                    })
+                    .execute()
+                    .data[0]
+                )
+
+        except Exception as e:
+            print("PAYMENT SETUP ERROR:", repr(e))
+            flash("Unable to set up Bitcoin payment right now.", "error")
+            payment = None
+
     if request.method == "POST":
-        # Paid services require confirmed payment
+
         if service.get("price"):
-            if not payment or payment ["status"] != "confirmed":
+            if not payment or payment["status"] != "confirmed":
                 flash(
-                    "please complete the Bitcoin payment before filing your case.",
+                    "Please complete the Bitcoin payment before filing your case.",
                     "error"
                 )
-                return redirect(url_for("service_form", slug=slug))          
+                return redirect(url_for("service_form", slug=slug))
+
         filled = {}
+
         for field in service["fields"]:
             if field["type"] == "file":
-                continue  # handled separately below
+                continue
+
             value = request.form.get(field["key"], "").strip()
+
             if value:
                 filled[field["key"]] = value
 
         min_required = service.get("min_fields_required", 0)
+
         if len(filled) < min_required:
             flash(
                 f"Please fill in at least {min_required} field"
                 f"{'s' if min_required != 1 else ''} before submitting.",
-                "error",
+                "error"
             )
-            return render_template("service_form.html", brand=BRAND, service=service, payment=payment, btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS"))
 
-        # Handle file upload(s) -> Supabase Storage, private bucket "attachments"
+            return render_template(
+                "service_form.html",
+                brand=BRAND,
+                service=service,
+                payment=payment,
+                btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
+            )
+
         uploaded_paths = []
+
         files = request.files.getlist("evidence")
+
         for f in files:
             if f and f.filename:
                 path = f"{session['user']['id']}/{slug}/{f.filename}"
+
                 try:
                     supabase.storage.from_("attachments").upload(
-                        path, f.read(), {"content-type": f.content_type}
+                        path,
+                        f.read(),
+                        {"content-type": f.content_type}
                     )
+
                     uploaded_paths.append(path)
+
                 except Exception as e:
-                    flash(f"Could not upload {f.filename}: {e}", "error")
+                    flash(
+                        f"Could not upload {f.filename}: {e}",
+                        "error"
+                    )
+
         if uploaded_paths:
             filled["evidence_paths"] = uploaded_paths
 
         case_number = generate_case_number(slug)
+
         try:
             supabase.table("cases").insert({
                 "user_id": session["user"]["id"],
@@ -295,13 +327,27 @@ def service_form(slug):
                 "data": filled,
                 "status": "open",
             }).execute()
-            flash(f"Case {case_number} filed successfully.", "success")
+
+            flash(
+                f"Case {case_number} filed successfully.",
+                "success"
+            )
+
             return redirect(url_for("dashboard"))
+
         except Exception as e:
-            flash(f"Could not file case: {e}", "error")
+            flash(
+                f"Could not file case: {e}",
+                "error"
+            )
 
-    return render_template("service_form.html", brand=BRAND, service=service, payment=payment, btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS"))
-
+    return render_template(
+        "service_form.html",
+        brand=BRAND,
+        service=service,
+        payment=payment,
+        btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
+    )
 @app.route("/payment/verify/<payment_id>", methods=["POST"])
 @login_required
 def verify_payment(payment_id):

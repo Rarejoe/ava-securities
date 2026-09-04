@@ -216,7 +216,7 @@ def service_form(slug):
     service = SERVICES.get(slug)
     if not service:
         abort(404)
-
+    database = db()
     payment = None
 
     if service.get("price"):

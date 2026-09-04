@@ -230,11 +230,6 @@ def service_form(slug):
             )
 
             payment = payment_resp.data[0] if payment_resp.data else None
-            if payment:
-                return redirect(
-                    url_for("payment_page", payment_id=payment["id"])
-                )
-
             if not payment:
                 btc_price = get_btc_price()
                 amount_btc = (
@@ -300,7 +295,10 @@ def service_form(slug):
                 payment=payment,
                 btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
             )
-
+             if payment:
+                return redirect(
+                    url_for("payment_page", payment_id=payment["id"])
+                )
         uploaded_paths = []
 
         files = request.files.getlist("evidence")

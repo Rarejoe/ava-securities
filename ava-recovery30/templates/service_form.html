@@ -135,27 +135,9 @@
 
             <!-- SUBMIT BUTTON -->
 
-            {% if not payment or payment.status == "confirmed" %}
-
-                <button
-                    type="submit"
-                    class="btn-primary"
-                >
-                    File case
-                </button>
-
-            {% elif payment.status == "pending" %}
-
-                <button
-                    type="button"
-                    class="btn-primary"
-                    disabled
-                >
-                    File Case
-                </button>
-
-            {% endif %}
-
+           <button type="submit" class="btn-primary">
+    File Case
+</button>
         </form>
 
     </div>

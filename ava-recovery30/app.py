@@ -230,6 +230,10 @@ def service_form(slug):
             )
 
             payment = payment_resp.data[0] if payment_resp.data else None
+            if payment:
+                return redirect(
+                    url_for("payment_page", payment_id=payment["id"])
+                )
 
             if not payment:
                 btc_price = get_btc_price()

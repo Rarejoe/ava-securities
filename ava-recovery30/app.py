@@ -79,7 +79,7 @@ def verify_btc_payment(amount_btc, created_at):
         transactions = json.loads(response.read())
 
     created_time = datetime.fromisoformat(
-        created_at.replace("Z" "+00:00")
+        created_at.replace("Z", "+00:00")
     ).timestamp()
 
     for tx in transactions:

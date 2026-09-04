@@ -68,6 +68,7 @@ SERVICES = {
                 "key": "contact_email",
                 "label": "How can we reach you?",
                 "type": "email",
+                "placeholder": "Type in email address"
                 "required": False,
             },
             {

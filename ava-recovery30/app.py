@@ -379,7 +379,7 @@ def payment_page(payment_id):
         qr_code=qr_code,
         btc_wallet_address=os.environ["BTC_WALLET_ADDRESS"]
     )
-@app.route("/payment/verify/<payment_id>", methods=["POST"])
+@app.route("/payment/verify/<payment_id>", methods=["GET", "POST"])
 @login_required
 def verify_payment(payment_id):
 

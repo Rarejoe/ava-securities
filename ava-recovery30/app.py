@@ -258,16 +258,6 @@ def service_form(slug):
             flash("Unable to set up Bitcoin payment right now.", "error")
             payment = None
 
-    if request.method == "POST":
-
-        if service.get("price"):
-            if not payment or payment["status"] != "confirmed":
-                flash(
-                    "Please complete the Bitcoin payment before filing your case.",
-                    "error"
-                )
-                return redirect(url_for("service_form", slug=slug))
-
         filled = {}
 
         for field in service["fields"]:
@@ -295,7 +285,7 @@ def service_form(slug):
                 payment=payment,
                 btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
             )
-        if payment:
+        if service.get("price"):
                 return redirect(
                     url_for("payment_page", payment_id=payment["id"])
                 )

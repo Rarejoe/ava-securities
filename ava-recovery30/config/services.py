@@ -68,13 +68,14 @@ SERVICES = {
                 "key": "contact_email",
                 "label": "How can we reach you?",
                 "type": "email",
-                "placeholder": "Type in email address"
+                "placeholder": "Type in email address",
                 "required": False,
             },
             {
                 "key": "contact_phone",
                 "label": "How can we reach you?",
                 "type": "text",
+                "placeholder": "Type in phone number",
                 "required": False,
             },
             {

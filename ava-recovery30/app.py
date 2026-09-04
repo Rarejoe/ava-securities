@@ -402,7 +402,7 @@ def verify_payment(payment_id):
         abort(404)
 
    # TEMP TEST MODE
-    txid = "TEST_TX_123456"
+    txid = f"TEST_{payment_id}"
 
     if not txid:
        return render_template(

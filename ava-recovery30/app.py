@@ -6,6 +6,8 @@ import urllib.request
 from decimal import Decimal
 from datetime import datetime
 from functools import wraps
+import io
+import base64
 
 from flask import (
     Flask, render_template, request, redirect,
@@ -247,6 +249,10 @@ def service_form(slug):
                     .execute()
                     .data[0]
                 )
+                # send the user to the Bitcoin checkout page
+                return redirect(
+                    url_for("payment_page", payment_id=payment["id"])
+                )  
 
         except Exception as e:
             print("PAYMENT SETUP ERROR:", repr(e))
@@ -337,6 +343,48 @@ def service_form(slug):
         service=service,
         payment=payment,
         btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
+    )
+
+@app.route("/payment/<payment_id>")
+@login_required
+def payment_page(payment_id):
+
+    payment = (
+        supabase_admin.table("payments")
+        .select("*")
+        .eq("id", payment_id)
+        .single()
+        .execute()
+        .data
+    )
+
+    if not payment:
+        abort(404)
+
+    service = SERVICES[payment["service_slug"]]
+
+    uri = (
+        f"bitcoin:{os.environ['BTC_WALLET_ADDRESS']}"
+        f"?amount={payment['amount_btc']}"
+    )
+
+    qr = qrcode.make(uri)
+
+    buffer = io.BytesIO()
+    qr.save(buffer, format="PNG")
+
+    qr_code = (
+        "data:image/png;base64,"
+        + base64.b64encode(buffer.getvalue()).decode()
+    )
+
+    return render_template(
+        "payment.html",
+        brand=BRAND,
+        service=service,
+        payment=payment,
+        qr_code=qr_code,
+        btc_wallet_address=os.environ["BTC_WALLET_ADDRESS"]
     )
 @app.route("/payment/verify/<payment_id>", methods=["POST"])
 @login_required

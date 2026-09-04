@@ -347,8 +347,10 @@ def service_form(slug):
 @app.route("/payment/verify/<payment_id>", methods=["POST"])
 @login_required
 def verify_payment(payment_id):
+    database = db()
+
     payment = (
-        supabase.table("payments")
+        database.table("payments")
         .select("*")
         .eq("id", payment_id)
         .eq("user_id", session["user"]["id"])
@@ -374,9 +376,8 @@ def verify_payment(payment_id):
             url_for("service_form", slug=payment["service_slug"])
         )
 
-    # Make sure this transaction hasn't already been used
     existing = (
-        supabase.table("payments")
+        database.table("payments")
         .select("id")
         .eq("txid", txid)
         .execute()
@@ -389,7 +390,7 @@ def verify_payment(payment_id):
             url_for("service_form", slug=payment["service_slug"])
         )
 
-    supabase.table("payments").update({
+    database.table("payments").update({
         "status": "confirmed",
         "txid": txid,
         "confirmed_at": datetime.utcnow().isoformat(),

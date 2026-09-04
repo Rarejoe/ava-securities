@@ -466,6 +466,27 @@ def case_detail(case_id):
     service = SERVICES.get(case["service_slug"])
     return render_template("case_detail.html", brand=BRAND, case=case, service=service)
 
+@app.route("/success/<case_id>")
+@login_required
+def payment_success(case_id):
+    case = (
+        supabase.table("cases")
+        .select("*")
+        .eq("id", case_id)
+        .single()
+        .execute()
+        .data
+    )
+
+    if not case:
+        abort(404)
+
+    return render_template(
+        "success.html",
+        brand=BRAND,
+        case=case
+    )
+
 
 # ---------------------------------------------------------------------
 # Admin — visible only to profiles.is_admin accounts. Uses supabase_admin

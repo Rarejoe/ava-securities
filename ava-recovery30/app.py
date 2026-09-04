@@ -402,11 +402,11 @@ def verify_payment(payment_id):
         payment["created_at"]
     )
 
- if not txid:
-    return render_template(
-        "payment_pending.html",
-        brand=BRAND,
-        payment=payment
+    if not txid:
+       return render_template(
+          "payment_pending.html",
+          brand=BRAND,
+          payment=payment
     )
 
     existing = (

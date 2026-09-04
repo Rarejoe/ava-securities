@@ -1,29 +1,73 @@
 {% extends "base.html" %}
-{% block title %}Waiting for Payment{% endblock %}
+{% block title %}Payment Pending{% endblock %}
 
 {% block content %}
 <meta http-equiv="refresh" content="15">
 
 <div class="checkout-wrap">
-  <div class="checkout-card" style="text-align:center">
+    <div class="checkout-card pending-card">
 
-    <div class="spinner"></div>
+        <div class="spinner"></div>
 
-    <h1>Waiting for Confirmation</h1>
+        <p class="eyebrow">BLOCKCHAIN VERIFICATION</p>
+        <h1>Waiting for Payment</h1>
 
-    <p>
-      We've detected your verification request.
-      Your Bitcoin transaction is being confirmed on the blockchain.
-    </p>
+        <p class="form-sub">
+            Your Bitcoin transaction has been submitted. AVA is checking the blockchain every 15 seconds.
+        </p>
 
-    <div class="amount-box">
-      <span>Payment Amount</span>
-      <h2>{{ payment.amount_btc }} BTC</h2>
+        <div class="amount-box">
+            <span>Amount</span>
+            <h2>{{ payment.amount_btc }} BTC</h2>
+        </div>
+
+        <div class="status-pill">
+            ⏳ Checking blockchain…
+        </div>
+
+        <p class="checkout-note">
+            This page refreshes automatically. You can safely keep it open.
+        </p>
+
     </div>
-
-    <p class="checkout-note">
-    </p>
-
-  </div>
 </div>
+
+<style>
+.pending-card{
+    text-align:center;
+}
+
+.spinner{
+    width:72px;
+    height:72px;
+    margin:10px auto 24px;
+    border:6px solid rgba(201,230,69,.18);
+    border-top:6px solid #C9E645;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    box-shadow:0 0 24px rgba(201,230,69,.25);
+}
+
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+.status-pill{
+    display:inline-block;
+    margin:18px 0;
+    padding:10px 18px;
+    border-radius:999px;
+    background:rgba(201,230,69,.12);
+    color:#C9E645;
+    font-weight:600;
+    border:1px solid rgba(201,230,69,.25);
+}
+
+.checkout-note{
+    opacity:.8;
+    margin-top:12px;
+    line-height:1.6;
+}
+</style>
 {% endblock %}

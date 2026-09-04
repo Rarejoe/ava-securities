@@ -51,13 +51,14 @@
             {% for field in service.fields %}
 
             <label>
+                {% if field.label %}
 
                 {{ field.label }}
 
                 {% if field.required %}
                     <span class="required-mark">*</span>
                 {% endif %}
-
+             {% endif %}
 
                 {% if field.type == "textarea" %}
 
@@ -114,6 +115,7 @@
                     <input
                         type="email"
                         name="{{ field.key }}"
+                        placeholder="{{ field.placeholder }}"
                         {{ "required" if field.required }}
                     >
 
@@ -123,6 +125,7 @@
                     <input
                         type="text"
                         name="{{ field.key }}"
+                        placeholder="{{ field.placeholder }}"
                         {{ "required" if field.required }}
                     >
 

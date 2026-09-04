@@ -468,7 +468,7 @@ def case_detail(case_id):
 @login_required
 def payment_success(case_id):
     case = (
-        supabase.table("cases")
+        supabase_admin.table("cases")
         .select("*")
         .eq("id", case_id)
         .single()

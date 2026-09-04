@@ -1,35 +1,157 @@
 {% extends "base.html" %}
-{% block title %}Case Submitted{% endblock %}
+{% block title %}Case Submitted — AVA{% endblock %}
 
 {% block content %}
-<div class="checkout-wrap">
-    <div class="checkout-card" style="text-align:center">
 
-        <div class="success-icon">✓</div>
+<div class="success-wrap">
+
+    <div class="success-card">
+
+        <div class="success-icon">
+            ✓
+        </div>
 
         <p class="eyebrow">PAYMENT CONFIRMED</p>
 
         <h1>Case Successfully Submitted</h1>
 
-        <p class="form-sub">
-            Your case has been securely received by AVA.
+        <p class="success-sub">
+            Your recovery request has been securely received by AVA Securities.
         </p>
 
-        <div class="amount-box">
+        <div class="case-box">
             <span>Case Number</span>
             <h2>{{ case.case_number }}</h2>
         </div>
 
-        <p class="checkout-note">
-            Our team will reach you using the contact information you provided if additional information is needed.
+        <div class="info-box">
+            <strong>What happens next?</strong>
+
+            <p>
+                Our team will reach you using the email or phone number you provided if any additional information is required.
+            </p>
+        </div>
+
+        <p class="trust-text">
+            Thanks for choosing AVA.
+            <br>
+            <strong>You're in good hands.</strong>
         </p>
 
-        <h3 style="margin-top:18px;">Thanks. You're in good hands.</h3>
-
-        <a href="{{ url_for('dashboard') }}" class="btn-primary">
+        <a href="{{ url_for('dashboard') }}" class="btn-primary full-btn">
             Return to Dashboard
         </a>
 
     </div>
+
 </div>
+
+<style>
+
+.success-wrap{
+    max-width:720px;
+    margin:30px auto;
+    padding:0 18px;
+}
+
+.success-card{
+    background:#10170D;
+    border:1px solid rgba(201,230,69,.12);
+    border-radius:24px;
+    padding:34px 26px;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.success-icon{
+    width:92px;
+    height:92px;
+    margin:0 auto 22px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#C9E645,#A6C91A);
+    color:#091105;
+    font-size:44px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 0 30px rgba(201,230,69,.35);
+}
+
+.success-card h1{
+    color:#fff;
+    margin:10px 0 12px;
+    font-size:34px;
+    line-height:1.2;
+}
+
+.success-sub{
+    color:#AAB59E;
+    line-height:1.7;
+    margin-bottom:28px;
+}
+
+.case-box{
+    background:linear-gradient(180deg,#141C10,#0E140A);
+    border:1px solid rgba(201,230,69,.18);
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:22px;
+}
+
+.case-box span{
+    color:#C9E645;
+    font-size:13px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.case-box h2{
+    color:#fff;
+    margin:12px 0 0;
+    font-size:32px;
+    word-break:break-word;
+}
+
+.info-box{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:16px;
+    padding:18px;
+    text-align:left;
+    margin-bottom:26px;
+}
+
+.info-box strong{
+    color:#fff;
+    display:block;
+    margin-bottom:8px;
+}
+
+.info-box p{
+    color:#B5C0AA;
+    line-height:1.7;
+    margin:0;
+}
+
+.trust-text{
+    color:#D5DED0;
+    font-size:18px;
+    line-height:1.8;
+    margin-bottom:28px;
+}
+
+.full-btn{
+    width:100%;
+    display:block;
+    text-align:center;
+    padding:16px;
+    border-radius:14px;
+    font-size:17px;
+    font-weight:700;
+    text-decoration:none;
+}
+
+</style>
+
 {% endblock %}

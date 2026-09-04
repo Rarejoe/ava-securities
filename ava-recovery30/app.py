@@ -402,14 +402,12 @@ def verify_payment(payment_id):
         payment["created_at"]
     )
 
-    if not txid:
-        flash(
-            "Payment has not been detected yet. Please wait for the transaction to confirm.",
-            "error"
-        )
-        return redirect(
-            url_for("service_form", slug=payment["service_slug"])
-        )
+ if not txid:
+    return render_template(
+        "payment_pending.html",
+        brand=BRAND,
+        payment=payment
+    )
 
     existing = (
         supabase_admin.table("payments")

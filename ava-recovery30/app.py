@@ -401,10 +401,8 @@ def verify_payment(payment_id):
     if not payment:
         abort(404)
 
-    txid = verify_btc_payment(
-        payment["amount_btc"],
-        payment["created_at"]
-    )
+   # TEMP TEST MODE
+    txid = "TEST_TX_123456"
 
     if not txid:
        return render_template(

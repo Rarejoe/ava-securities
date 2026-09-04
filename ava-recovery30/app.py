@@ -216,13 +216,14 @@ def service_form(slug):
     service = SERVICES.get(slug)
     if not service:
         abort(404)
+
     database = db()
     payment = None
 
     if service.get("price"):
         try:
             payment_resp = (
-                supabase.table("payments")
+                database.table("payments")
                 .select("*")
                 .eq("user_id", session["user"]["id"])
                 .eq("service_slug", slug)
@@ -241,7 +242,7 @@ def service_form(slug):
                 ).quantize(Decimal("0.00000001"))
 
                 payment = (
-                    supabase.table("payments")
+                    database.table("payments")
                     .insert({
                         "user_id": session["user"]["id"],
                         "service_slug": slug,
@@ -314,10 +315,7 @@ def service_form(slug):
                     uploaded_paths.append(path)
 
                 except Exception as e:
-                    flash(
-                        f"Could not upload {f.filename}: {e}",
-                        "error"
-                    )
+                    flash(f"Could not upload {f.filename}: {e}", "error")
 
         if uploaded_paths:
             filled["evidence_paths"] = uploaded_paths
@@ -325,7 +323,7 @@ def service_form(slug):
         case_number = generate_case_number(slug)
 
         try:
-            supabase.table("cases").insert({
+            database.table("cases").insert({
                 "user_id": session["user"]["id"],
                 "service_slug": slug,
                 "case_number": case_number,
@@ -333,18 +331,11 @@ def service_form(slug):
                 "status": "open",
             }).execute()
 
-            flash(
-                f"Case {case_number} filed successfully.",
-                "success"
-            )
-
+            flash(f"Case {case_number} filed successfully.", "success")
             return redirect(url_for("dashboard"))
 
         except Exception as e:
-            flash(
-                f"Could not file case: {e}",
-                "error"
-            )
+            flash(f"Could not file case: {e}", "error")
 
     return render_template(
         "service_form.html",

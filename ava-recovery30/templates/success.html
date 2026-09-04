@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Case Submitted{% endblock %}
+
+{% block content %}
+<div class="checkout-wrap">
+    <div class="checkout-card" style="text-align:center">
+
+        <div class="success-icon">✓</div>
+
+        <p class="eyebrow">PAYMENT CONFIRMED</p>
+
+        <h1>Case Successfully Submitted</h1>
+
+        <p class="form-sub">
+            Your case has been securely received by AVA.
+        </p>
+
+        <div class="amount-box">
+            <span>Case Number</span>
+            <h2>{{ case.case_number }}</h2>
+        </div>
+
+        <p class="checkout-note">
+            Our team will reach you using the contact information you provided if additional information is needed.
+        </p>
+
+        <h3 style="margin-top:18px;">Thanks. You're in good hands.</h3>
+
+        <a href="{{ url_for('dashboard') }}" class="btn-primary">
+            Return to Dashboard
+        </a>
+
+    </div>
+</div>
+{% endblock %}

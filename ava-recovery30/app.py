@@ -295,7 +295,7 @@ def service_form(slug):
                 payment=payment,
                 btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
             )
-             if payment:
+       if payment:
                 return redirect(
                     url_for("payment_page", payment_id=payment["id"])
                 )

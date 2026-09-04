@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Waiting for Payment{% endblock %}
+
+{% block content %}
+<meta http-equiv="refresh" content="15">
+
+<div class="checkout-wrap">
+  <div class="checkout-card" style="text-align:center">
+
+    <div class="spinner"></div>
+
+    <h1>Waiting for Confirmation</h1>
+
+    <p>
+      We've detected your verification request.
+      Your Bitcoin transaction is being confirmed on the blockchain.
+    </p>
+
+    <div class="amount-box">
+      <span>Payment Amount</span>
+      <h2>{{ payment.amount_btc }} BTC</h2>
+    </div>
+
+    <p class="checkout-note">
+      This page refreshes automatically every 15 seconds.
+      You don't need to press anything.
+    </p>
+
+  </div>
+</div>
+{% endblock %}

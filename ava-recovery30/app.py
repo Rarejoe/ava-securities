@@ -54,6 +54,11 @@ def admin_required(view):
         return view(*args, **kwargs)
     return wrapped
 
+def db():
+    if session.get("access_token"):
+        supabase.postgrest.auth(session["access_token"])
+    return supabase
+
 
 def generate_case_number(service_slug: str) -> str:
     year = datetime.utcnow().year

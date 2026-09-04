@@ -99,7 +99,7 @@ SERVICES = {
         ),
         "min_fields_required": 1,
         "payment_required": True,
-        "price": 0,
+        "price": 1000,
         "price_note": "One-time service fee.",
         "fields": [
             {
@@ -124,12 +124,14 @@ SERVICES = {
                 "key": "contact_email",
                 "label":"How can we reach you?",
                 "type": "email",
+                "placeholder": "Type in the email you'd want us to contact",
                 "required": False,
             },
             {
                 "key": "contact_phone",
                 "label": "How can we reach you?",
                 "type": "text",
+                "placeholder": "Type in the number you'd want us to contact",
                 "required": False,
             },
             {
@@ -148,12 +150,12 @@ SERVICES = {
         "name": "Social Media Accounts",
         "icon": "at-sign",
         "description": (
-            "Log any social account you're trying to recover — "
+            "Log any social account you're trying to recover "
             "one entry per platform."
         ),
         "min_fields_required": 1,
         "payment_required": True,
-        "price": 0,
+        "price": 750,
         "price_note": "One-time service fee.",
         "fields": [
             {
@@ -164,7 +166,7 @@ SERVICES = {
             },
             {
                 "key": "account_email",
-                "label": "Associated email",
+                "label": "Associated email/ Number",
                 "type": "email",
                 "required": False,
             },
@@ -178,12 +180,14 @@ SERVICES = {
                 "key": "contact_email",
                 "label": "Email address for updates",
                 "type": "email",
+                "placeholder": "Type in the email you'd want us to contact",
                 "required": False,
             },
             {
                 "key": "contact_phone",
                 "label": "Phone number for updates",
                 "type": "text",
+                "placeholder": "Type in the Number you'd want us to contact",
                 "required": False,
             },
         ],
@@ -197,12 +201,11 @@ SERVICES = {
         "icon": "file-text",
         "description": (
             "File a structured record of money you believe was sent "
-            "to a scam or fraudulent party — for your own records or "
-            "to submit to your bank, platform, or a fraud authority."
+            "to a scam or fraudulent party"
         ),
         "min_fields_required": 1,
         "payment_required": True,
-        "price": 0,
+        "price": 700,
         "price_note": "One-time service fee.",
         "fields": [
             {

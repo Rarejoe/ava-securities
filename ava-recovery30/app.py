@@ -54,12 +54,6 @@ def admin_required(view):
         return view(*args, **kwargs)
     return wrapped
 
-def db():
-    if session.get("access_token"):
-        supabase.postgrest.auth(session["access_token"])
-    return supabase
-
-
 def generate_case_number(service_slug: str) -> str:
     year = datetime.utcnow().year
     suffix = "".join(random.choices(string.digits, k=6))
@@ -217,13 +211,13 @@ def service_form(slug):
     if not service:
         abort(404)
 
-    database = db()
+
     payment = None
 
     if service.get("price"):
         try:
             payment_resp = (
-                database.table("payments")
+                supabase_admin.table("payments")
                 .select("*")
                 .eq("user_id", session["user"]["id"])
                 .eq("service_slug", slug)
@@ -242,7 +236,7 @@ def service_form(slug):
                 ).quantize(Decimal("0.00000001"))
 
                 payment = (
-                    database.table("payments")
+                    supabase_admin.table("payments")
                     .insert({
                         "user_id": session["user"]["id"],
                         "service_slug": slug,
@@ -347,10 +341,10 @@ def service_form(slug):
 @app.route("/payment/verify/<payment_id>", methods=["POST"])
 @login_required
 def verify_payment(payment_id):
-    database = db()
+
 
     payment = (
-        database.table("payments")
+        supabase_admin.table("payments")
         .select("*")
         .eq("id", payment_id)
         .eq("user_id", session["user"]["id"])
@@ -377,7 +371,7 @@ def verify_payment(payment_id):
         )
 
     existing = (
-        database.table("payments")
+        supabase_admin.table("payments")
         .select("id")
         .eq("txid", txid)
         .execute()
@@ -390,7 +384,7 @@ def verify_payment(payment_id):
             url_for("service_form", slug=payment["service_slug"])
         )
 
-    database.table("payments").update({
+    supabase_admin.table("payments").update({
         "status": "confirmed",
         "txid": txid,
         "confirmed_at": datetime.utcnow().isoformat(),

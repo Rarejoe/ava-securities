@@ -8,6 +8,7 @@ from datetime import datetime
 from functools import wraps
 import io
 import base64
+import qrcode
 
 from flask import (
     Flask, render_template, request, redirect,

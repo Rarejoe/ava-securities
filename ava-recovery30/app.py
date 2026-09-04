@@ -432,7 +432,7 @@ def verify_payment(payment_id):
     }).eq("id", payment_id).execute()
     
     new_case = (
-        supabase.table("cases")
+        supabase_admin.table("cases")
         .insert({
             "user_id": payment["user_id"],
             "service_slug": payment["service_slug"],

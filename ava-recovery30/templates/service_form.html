@@ -38,71 +38,7 @@
         </div>
 
 
-        <!-- BITCOIN PAYMENT -->
-
-        {% if payment and payment.status == "pending" %}
-
-        <div class="payment-box">
-
-            <p class="eyebrow">Payment required</p>
-
-            <h3>Pay with Bitcoin</h3>
-
-            <p>
-                Send exactly
-                <strong>{{ payment.amount_btc }} BTC</strong>
-                to the Bitcoin address below.
-            </p>
-
-            <div class="wallet-address">
-                {{ btc_wallet_address }}
-            </div>
-
-            <button
-                type="button"
-                class="btn-secondary"
-                onclick="copyWallet()"
-            >
-                Copy Bitcoin address
-            </button>
-
-            <form
-                method="POST"
-                action="{{ url_for('verify_payment', payment_id=payment.id) }}"
-                class="payment-verify-form"
-            >
-
-                <button
-                    type="submit"
-                    class="btn-primary"
-                >
-                    I've Paid — Verify Payment
-                </button>
-
-            </form>
-
-            <p class="payment-note">
-                After sending the Bitcoin, click the button above.
-                Your payment must be confirmed on the Bitcoin network
-                before you can file your case.
-            </p>
-
-        </div>
-
-        {% elif payment and payment.status == "confirmed" %}
-
-        <div class="payment-success">
-
-            <strong>✓ Bitcoin payment confirmed</strong>
-
-            <span>
-                Your payment has been verified. You can now file your case.
-            </span>
-
-        </div>
-
-        {% endif %}
-
+      
 
         <!-- CASE FORM -->
 

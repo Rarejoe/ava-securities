@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Bitcoin Checkout — AVA{% endblock %}
+
+{% block content %}
+<div class="checkout-wrap">
+
+    <a href="{{ url_for('service_form', slug=service.slug) }}" class="back-link">
+        ← Back to form
+    </a>
+
+    <div class="checkout-card">
+
+        <div class="step-pill">Step 2 of 2</div>
+
+        <h1>Bitcoin Checkout</h1>
+        <p class="checkout-sub">
+            Complete your payment to activate your recovery case.
+        </p>
+
+        <div class="amount-box">
+            <span>You pay</span>
+            <h2>${{ service.price }}</h2>
+            <p>{{ payment.amount_btc }} BTC</p>
+        </div>
+
+        <div class="qr-box">
+            <img src="{{ qr_code }}" alt="Bitcoin QR Code">
+        </div>
+
+        <div class="wallet-section">
+            <label>Bitcoin Wallet</label>
+
+            <div class="wallet-address" id="wallet">
+                {{ btc_wallet_address }}
+            </div>
+
+            <button type="button"
+                    class="btn-secondary"
+                    onclick="copyWallet()">
+                Copy Address
+            </button>
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('verify_payment', payment_id=payment.id) }}">
+
+            <button class="btn-primary">
+                I've Paid — Verify Payment
+            </button>
+
+        </form>
+
+        <small class="checkout-note">
+            AVA automatically checks the Bitcoin blockchain after you verify.
+        </small>
+
+    </div>
+
+</div>
+
+<script>
+function copyWallet(){
+    const text = document.getElementById("wallet").innerText;
+    navigator.clipboard.writeText(text);
+    alert("Bitcoin address copied");
+}
+</script>
+{% endblock %}

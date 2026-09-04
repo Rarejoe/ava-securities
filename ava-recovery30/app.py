@@ -286,9 +286,14 @@ def service_form(slug):
                 btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
             )
         if service.get("price"):
-                return redirect(
-                    url_for("payment_page", payment_id=payment["id"])
-                )
+            supabase_admin.table("payments").update({
+                "form_data": filled
+            }).eq("id", payment["id"]).execute()
+
+            return redirect(
+                url_for("payment_page", payment_id=payment["id"])
+            )
+
         uploaded_paths = []
 
         files = request.files.getlist("evidence")
@@ -427,16 +432,22 @@ def verify_payment(payment_id):
         "txid": txid,
         "confirmed_at": datetime.utcnow().isoformat(),
     }).eq("id", payment_id).execute()
-
-    flash(
-        "Bitcoin payment confirmed. You can now file your case.",
-        "success"
+    
+    new_case = (
+        supabase.table("cases")
+        .insert({
+            "user_id": payment["user_id"],
+            "service_slug": payment["service_slug"],
+            "case_number": generate_case_number(payment["service_slug"]),
+            "data": payment["form_data"],
+            "status": "open",
+        })
+        .execute()
+        .data[0]
     )
-
     return redirect(
-        url_for("service_form", slug=payment["service_slug"])
-    )
-
+       url_for("payment_success", case_id=new_case["id"])
+    )  
 
 @app.route("/case/<case_id>")
 @login_required

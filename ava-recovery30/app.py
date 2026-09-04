@@ -285,15 +285,6 @@ def service_form(slug):
                 payment=payment,
                 btc_wallet_address=os.environ.get("BTC_WALLET_ADDRESS")
             )
-        if service.get("price"):
-            supabase_admin.table("payments").update({
-                "form_data": filled
-            }).eq("id", payment["id"]).execute()
-
-            return redirect(
-                url_for("payment_page", payment_id=payment["id"])
-            )
-
         uploaded_paths = []
 
         files = request.files.getlist("evidence")
@@ -316,6 +307,15 @@ def service_form(slug):
 
         if uploaded_paths:
             filled["evidence_paths"] = uploaded_paths
+
+        if service.get("price"):
+            supabase_admin.table("payments").update({
+                "form_data": filled
+            }).eq("id", payment["id"]).execute()
+            return redirect(
+                url_for("payment_page", payment_id=payment["id"])
+            )
+                
 
         case_number = generate_case_number(slug)
 
